@@ -30,7 +30,7 @@ public class RenameMount implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if(!(sender instanceof Player)) return false;
         if(!(sender.hasPermission("SimpleMounts.rename"))) return false;
-        if(args.length > 1) {SimpleMounts.sendUserError("Must provide a name",(Player)sender); return true;}
+        if(args.length != 1) {SimpleMounts.sendUserError("Must provide a name",(Player)sender); return true;}
 
         Player player = (Player)sender;
 

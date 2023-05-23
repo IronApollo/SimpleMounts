@@ -4,6 +4,7 @@ import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
 import simplemounts.simplemounts.SimpleMounts;
 import simplemounts.simplemounts.Util.Managers.EntityManager;
@@ -33,6 +34,10 @@ public class Release implements CommandExecutor {
             SimpleMounts.sendUserError("Must first have a summoned mount", player);
             return true;
         }
+        AbstractHorse h = (AbstractHorse)EntityManager.getSummonedMount(player);
+
+        //Correcting to vanilla spawns
+        h.setPersistent(false);
 
         EntityManager.removeMount(player);
 

@@ -81,6 +81,7 @@ public final class SimpleMounts extends JavaPlugin {
         new BreedHandler(this);
         new RidingHandler(this);
         new SummonHandler(this);
+        new EntityInteractHandler(this);
 
         //Register Commands
         this.getCommand("mounts").setExecutor(new OpenMounts());

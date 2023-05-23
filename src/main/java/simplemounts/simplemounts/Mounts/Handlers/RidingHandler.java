@@ -22,13 +22,13 @@ public class RidingHandler implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onEntityMountEvent(EntityMountEvent event) {
 
-        if(!(event.getMount() instanceof Horse)) return;
+        if(!(event.getMount() instanceof AbstractHorse)) return;
 
         if(!(event.getEntity() instanceof Player)) return;
 
         Player player = (Player)event.getEntity();
 
-        AbstractHorse h1 = (Horse)event.getMount();
+        AbstractHorse h1 = (AbstractHorse)event.getMount();
 
         Player owningPlayer = EntityManager.getOwningPlayer(h1);
         if(owningPlayer == null) return; //If is not a currently summoned mount, then its wild and player can ride

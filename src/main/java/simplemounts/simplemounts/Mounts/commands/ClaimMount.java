@@ -66,7 +66,9 @@ public class ClaimMount implements CommandExecutor {
             return true;
         }
 
-        if(EntityManager.getOwningPlayer(horse).equals(player)) {SimpleMounts.sendUserError("You have already claimed this mount",player);return true;}
+        if(EntityManager.getOwningPlayer(horse) != null) {
+            if(EntityManager.getOwningPlayer(horse).equals(player)) {SimpleMounts.sendUserError("You have already claimed this mount",player);return true;}
+        }
 
         try {
             JSONObject json = EntityManager.createEntitySave(horse,player);

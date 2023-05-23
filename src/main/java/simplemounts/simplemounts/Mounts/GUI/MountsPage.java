@@ -95,16 +95,14 @@ public class MountsPage {
             lore.add(ChatColor.DARK_GRAY + "------------");
             DecimalFormat df = new DecimalFormat("0.0");
 
-            lore.add(ChatColor.RED + "Health : " + df.format(((Double.parseDouble(e.get("health").toString()))/Double.parseDouble(e.get("max-health").toString()))*100) + "%");
-            lore.add(ChatColor.AQUA + "Speed : " + df.format((((Double.parseDouble(e.get("speed").toString()))-0.1125)/(0.3375 - 0.1125))*100) + "%");
-            lore.add(ChatColor.GREEN + "Jump  : " + df.format((((Double.parseDouble(e.get("jump").toString()))-0.4)/(1.0 - 0.4))*100) + "%");
+            lore.add(ChatColor.RED +   "Health : " + ChatColor.GRAY + (Double.parseDouble(e.get("health").toString())) + "/" + (Double.parseDouble(e.get("max-health").toString())));
+            lore.add(ChatColor.AQUA +  "Speed : " + ChatColor.GRAY + df.format((Double.parseDouble(e.get("speed").toString())) * 42.16d) + " bps");
+            lore.add(ChatColor.GREEN + "Jump   : " + ChatColor.GRAY + getJumpInBlocks((Double.parseDouble(e.get("jump").toString()))) + " blocks");//df.format((((Double.parseDouble(e.get("jump").toString()))-0.4)/(1.0 - 0.4))*100) + "%");
             lore.add(ChatColor.DARK_GRAY + "------------");
             if(mounts.get(counter).isSummoned()) {
                 lore.add(ChatColor.RED + "" + ChatColor.BOLD + "Click to Store Mount");
             } else {
                 lore.add(ChatColor.GREEN + "" + ChatColor.BOLD + "Click to Summon Mount");
-                lore.add("");
-                lore.add(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "Shift + Q to release mount");
             }
 
             meta.setLore(lore);
@@ -150,6 +148,18 @@ public class MountsPage {
             if(i > calcWeightedValue) returnString += ChatColor.GRAY;
         }
         return returnString;
+    }
+
+    private Double getJumpInBlocks(Double d) {
+        if(d <= 0.4) return 1.11;
+        if(d <= 0.5) return 1.62;
+        if(d <= 0.6) return 2.22;
+        if(d <= 0.7) return 2.89;
+        if(d <= 0.8) return 3.63;
+        if(d <= 0.9) return 4.44;
+        if(d <= 1.0) return 5.30;
+        return 6.0;
+
     }
 
 
