@@ -1,6 +1,5 @@
 package simplemounts.simplemounts.Util.Managers;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -36,7 +35,7 @@ public abstract class EntityManager {
      * @param player
      */
     public static JSONObject createEntitySave(Entity entity, Player player) throws IOException {
-        JSONObject obj = HorseSerialization.serializeHorse((Horse)entity);
+        JSONObject obj = HorseSerialization.serializeHorse((AbstractHorse)entity);
 
         UUID id = Database.insertNewMount(player,obj);
 
@@ -56,9 +55,10 @@ public abstract class EntityManager {
 
     /**
      * Converts the JSON to a living horse entity
+     *
      * @return
      */
-    public static Horse spawnHorse(Mount m, Player player) {
+    public static AbstractHorse spawnHorse(Mount m, Player player) {
         //Generic Entity Data
         JSONObject json = m.getHorseData();
 
@@ -72,25 +72,36 @@ public abstract class EntityManager {
 
 
             //Horse Specific Data
-            Horse horse = (Horse) entity;
-            horse.setColor(Horse.Color.valueOf(json.get("color").toString()));
-            horse.setStyle(Horse.Style.valueOf(json.get("style").toString()));
+            AbstractHorse horse = (AbstractHorse) entity;
+
             if(json.get("name") != null) {horse.setCustomName(json.get("name").toString());horse.setCustomNameVisible(true);}
 
             horse.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(Double.parseDouble(json.get("max-health").toString()));
-            entity.setHealth(Double.parseDouble(json.get("health").toString()));
+
+            //Fix for entities stuck at 0 health and dieing over and over
+            if(Double.parseDouble(json.get("health").toString()) <= 0) {
+                entity.setHealth(1.0);
+            } else {
+                entity.setHealth(Double.parseDouble(json.get("health").toString()));
+            }
             horse.getAttribute(Attribute.HORSE_JUMP_STRENGTH).setBaseValue(Double.parseDouble(json.get("jump").toString()));
             horse.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(Double.parseDouble(json.get("speed").toString()));
 
             if(json.get("saddle") != null) {horse.getInventory().setSaddle(new ItemStack(Material.valueOf(json.get("saddle").toString())));}
-            if(json.get("armor") != null) {horse.getInventory().setArmor(new ItemStack(Material.valueOf(json.get("armor").toString())));}
+
+            if(entity instanceof Horse) {
+                Horse h = (Horse)entity;
+                h.setColor(Horse.Color.valueOf(json.get("color").toString()));
+                h.setStyle(Horse.Style.valueOf(json.get("style").toString()));
+                if(json.get("armor") != null) {h.getInventory().setArmor(new ItemStack(Material.valueOf(json.get("armor").toString())));}
+            }
 
             //Special values
             horse.setPersistent(true);
             horse.setTamed(true);
             horse.setAdult();
             horse.setOwner(player);
-            if(SimpleMounts.getCustomConfig().getBoolean("Basic.isImmortal")) horse.setInvulnerable(true);
+            if(SimpleMounts.getCustomConfig().getBoolean("basic.is-immortal")) horse.setInvulnerable(true);
 
             ArrayList<Object> o = new ArrayList<>();
             o.add(entity);
@@ -115,7 +126,7 @@ public abstract class EntityManager {
         if(summonedMounts.isEmpty()) {SimpleMounts.sendUserError("No mounts to store!",player);return;}
         if(!summonedMounts.containsKey(player)) {SimpleMounts.sendUserError("No mounts to store!",player);return;}
 
-        Horse e = (Horse)summonedMounts.get(player).get(0);
+        AbstractHorse e = (AbstractHorse)summonedMounts.get(player).get(0);
         UUID uuid = UUID.fromString(summonedMounts.get(player).get(1).toString());
         EntityManager.updateSummonTag(player,e,false);
         Database.updateMount(player,uuid,"horse_data",HorseSerialization.serializeHorse(e));
@@ -133,7 +144,7 @@ public abstract class EntityManager {
     /**
      * Updates the summoned tag inside the JSON file for the horse
      */
-    public static void updateSummonTag(Player player, Horse horse, boolean b) {
+    public static void updateSummonTag(Player player, AbstractHorse horse, boolean b) {
         if(b) { //True, adds entity to file
             Database.updateMount(player,(UUID)summonedMounts.get(player).get(1),"isSummoned",1);
             Database.updateMount(player,(UUID)summonedMounts.get(player).get(1),"entity_id",horse.getUniqueId());
@@ -164,7 +175,7 @@ public abstract class EntityManager {
      * @param player
      */
     public static void removeMount(Player player) {
-        Horse h = (Horse)summonedMounts.get(player).get(0);
+        AbstractHorse h = (AbstractHorse)summonedMounts.get(player).get(0);
         UUID uuid = UUID.fromString(summonedMounts.get(player).get(1).toString());
 
         summonedMounts.remove(player);
@@ -180,21 +191,32 @@ public abstract class EntityManager {
         for(Map.Entry<Player, ArrayList<Object>> entry : summonedMounts.entrySet()) {
             Player player = entry.getKey();
             ArrayList<Object> objects = entry.getValue();
-            Horse horse = (Horse)objects.get(0);
+            AbstractHorse horse = (AbstractHorse)objects.get(0);
             horse.remove();
             updateSummonTag(player,horse,false);
         }
     }
 
+    /**
+     * Returns a list of mounts that a player owns from the database
+     * @param player
+     * @return
+     */
     public static ArrayList<Mount> getMounts(Player player) {
         return Database.getMounts(player);
     }
 
-    public static Player getOwningPlayer(Horse h1) {
+    /**
+     * Returns the player who currently owns the mount
+     * Returns null if no player currently owns it
+     * @param h1
+     * @return
+     */
+    public static Player getOwningPlayer(AbstractHorse h1) {
         for(Map.Entry<Player, ArrayList<Object>> entry : summonedMounts.entrySet()) {
             Player player = entry.getKey();
             ArrayList<Object> objects = entry.getValue();
-            Horse horse = (Horse)objects.get(0);
+            AbstractHorse horse = (AbstractHorse)objects.get(0);
 
             if(horse.getEntityId() == h1.getEntityId()) return player;
         }

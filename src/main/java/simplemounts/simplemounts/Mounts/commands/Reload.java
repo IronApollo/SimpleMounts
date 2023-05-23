@@ -16,7 +16,7 @@ public class Reload implements CommandExecutor {
 
         SimpleMounts.reloadCustomConfig();
         String s = "Reloaded Simple Mounts Config";
-        if(sender instanceof Player) {SimpleMounts.sendSystemLog(s);return true;}
+        if(!(sender instanceof Player)) {SimpleMounts.sendSystemLog(s);return true;}
         SimpleMounts.sendPlayerMessage(s,(Player)sender);
         return true;
 

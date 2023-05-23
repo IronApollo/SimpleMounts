@@ -1,5 +1,7 @@
 package simplemounts.simplemounts.Mounts.commands;
 
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -42,42 +44,40 @@ public class ClaimMount implements CommandExecutor {
             return true;
         }
 
-
-
         //Code for claiming of mount
-        if(!(le instanceof Horse)) {
-            SimpleMounts.sendUserError("Only entities of type horse are supported at the moment", player);
+        if(!(le instanceof Horse || le instanceof SkeletonHorse || le instanceof ZombieHorse)) {
+            SimpleMounts.sendUserError("Only entities of type horse, skele horse, and zombie horse, are supported at the moment", player);
             return true;    //temporary till more types
         }
 
-        Horse horse = (Horse)le;
+        AbstractHorse horse = (AbstractHorse)le;
 
-        if(horse.getOwner() == null) {
+        //Current supported mounts
+        if(horse.getOwner() == null && !(le instanceof SkeletonHorse) && !(le instanceof ZombieHorse)) {
             SimpleMounts.sendUserError("The Horse must be tamed before you can claim it.",player);
             return true;
         }
 
-        if(!horse.getOwner().equals(player)) {
-            SimpleMounts.sendUserError("This is not your mount. Sending claim request...", player);
-        }
-
         ArrayList<Mount> mounts = EntityManager.getMounts(player);
 
-        SimpleMounts.sendPlayerMessage("Mounts Size: " + mounts.size() + " | Config value: " + SimpleMounts.getCustomConfig().getInt("Basic.max-mounts"),player);
-
         //Check if player is already at the max amount of mounts
-        if(mounts.size() >= SimpleMounts.getCustomConfig().getInt("Basic.max-mounts")) {
+        if(mounts.size() >= SimpleMounts.getCustomConfig().getInt("basic.max-mounts")) {
             SimpleMounts.sendUserError("You are currently at the max amount of mounts",player);
             return true;
         }
 
-        //Write as a transaction for saving and removing of entity
+        if(EntityManager.getOwningPlayer(horse) != null) {
+            if(EntityManager.getOwningPlayer(horse).equals(player)) {SimpleMounts.sendUserError("You have already claimed this mount",player);return true;}
+        }
+
         try {
             JSONObject json = EntityManager.createEntitySave(horse,player);
 
             horse.remove(); //Remove original horse
 
             SimpleMounts.sendPlayerMessage("You have tamed a " + horse.getType().toString().toLowerCase() + "!", player);
+            player.spawnParticle(Particle.CRIT,player.getLocation(),5);
+            player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_BLAST,1.0f,1.0f);
 
         } catch (Throwable e) {
             //General Exception. Undo all actions

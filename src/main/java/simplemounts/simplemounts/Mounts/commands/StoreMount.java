@@ -1,5 +1,6 @@
 package simplemounts.simplemounts.Mounts.commands;
 
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -28,6 +29,7 @@ public class StoreMount implements CommandExecutor {
 
         try {
             EntityManager.storeSummonedMount(player);
+            player.playSound(player.getLocation(), Sound.ENTITY_HORSE_ARMOR,1.0f,1.0f);
         } catch (IOException e) {
             SimpleMounts.sendSystemError("Unable to save existing mount", player, e);
             throw new RuntimeException(e);

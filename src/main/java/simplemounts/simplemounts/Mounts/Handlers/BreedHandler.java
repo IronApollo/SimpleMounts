@@ -1,6 +1,7 @@
 package simplemounts.simplemounts.Mounts.Handlers;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,7 +18,7 @@ public class BreedHandler implements Listener {
 
     @EventHandler
     public void onBreedEvent(EntityBreedEvent event) {
-        if(!(event.getEntity() instanceof Horse)) return;
+        if(!(event.getEntity() instanceof AbstractHorse)) return;
         if(!(event.getBreeder() instanceof Player)) return;
 
         Player player = (Player)event.getBreeder();
@@ -29,7 +30,7 @@ public class BreedHandler implements Listener {
         Player motherOwner = (Player)mother.getOwner();
 
         if(fatherOwner != null && motherOwner != null) {
-            if(!SimpleMounts.getCustomConfig().getBoolean("Basic.isBreedable")) {
+            if(!SimpleMounts.getCustomConfig().getBoolean("basic.is-breedable")) {
                 SimpleMounts.sendUserError("Breeding of mounts is disabled",player);
                 event.setCancelled(true);
                 return;

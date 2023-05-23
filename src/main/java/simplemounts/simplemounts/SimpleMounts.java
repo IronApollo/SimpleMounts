@@ -2,6 +2,7 @@ package simplemounts.simplemounts;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -75,11 +76,12 @@ public final class SimpleMounts extends JavaPlugin {
         new InteractHandler(this);    //All player events
 
         log("Handlers Loaded");
-        new TamingHandler(this);
         new DeathHandler(this);
         new LogoutHandler(this);
         new BreedHandler(this);
         new RidingHandler(this);
+        new SummonHandler(this);
+        new EntityInteractHandler(this);
 
         //Register Commands
         this.getCommand("mounts").setExecutor(new OpenMounts());
@@ -88,6 +90,8 @@ public final class SimpleMounts extends JavaPlugin {
         this.getCommand("mrename").setExecutor(new RenameMount());
         this.getCommand("mhelp").setExecutor(new Help());
         this.getCommand("mreload").setExecutor(new Reload());
+        this.getCommand("mride").setExecutor(new Ride());
+        this.getCommand("mrelease").setExecutor(new Release());
 //        this.getCommand("RPGCard").setTabCompleter(new CharacterCardTabComplete());
         log("Commands Loaded");
 
@@ -182,6 +186,8 @@ public final class SimpleMounts extends JavaPlugin {
     public static void sendSystemError(String msg, Player player, Throwable e) {
         String sysMessage = prefix + " : " + ChatColor.RED + "CRITICAL: " + msg + "| ERROR-INFO: " + e + " | Triggered by " + player.getName();
         player.sendMessage(sysMessage);
+        player.playSound(player, Sound.ENTITY_HORSE_DEATH,1.0f,1.0f);
+        player.playSound(player, Sound.ENTITY_GHAST_SCREAM,1.0f,1.0f);
         Bukkit.getLogger().info(sysMessage);
     }
 
@@ -192,6 +198,7 @@ public final class SimpleMounts extends JavaPlugin {
     public static void sendUserError(String msg, Player player) {
         String sysMessage = prefix + " : " + ChatColor.RED + msg;
         player.sendMessage(sysMessage);
+        player.playSound(player, Sound.ENTITY_VILLAGER_NO,1.0f,1.0f);
     }
 
     public static void sendSystemLog(String msg) {

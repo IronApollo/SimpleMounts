@@ -1,10 +1,7 @@
 package simplemounts.simplemounts.Mounts.Handlers;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Horse;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -22,8 +19,8 @@ public class DeathHandler implements Listener {
     public void onEntityDeathEvent(EntityDeathEvent event) {
         //On death, mount should be removed from current mounts and persistent storage
         LivingEntity le = event.getEntity();
-        if(!(le instanceof Horse)) return;
-        Horse horse = (Horse)le;
+        if(!(le instanceof AbstractHorse)) return;
+        AbstractHorse horse = (AbstractHorse)le;
 
         Player player = (Player)horse.getOwner();
 

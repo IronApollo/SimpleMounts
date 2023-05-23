@@ -2,6 +2,7 @@ package simplemounts.simplemounts.Util.Database;
 
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -44,6 +45,7 @@ public class Database {
                     + "isSummoned integer NOT NULL,\n"
                     + "entity_id varchar(255),\n"   //May be null
                     + "horse_data text NOT NULL,\n"
+                    + "trusted_players text ,\n"
                     + "CONSTRAINT Pk_Mount PRIMARY KEY (player_id,mount_id)"
                     + ");";
             Statement statement = conn.createStatement();
@@ -207,5 +209,41 @@ public class Database {
         } catch(SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Adds a player to the "trusted" field in the database. Stored as a JSON ARRAY
+     * @param mountId
+     * @param trusted
+     */
+    public static void addTrustedPlayer(UUID mountId, Player trusted) {
+        String sql = "SELECT trusted_players FROM mounts WHERE mount_id = ?";
+
+        ResultSet rs;
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1,mountId.toString());
+
+            rs = pstmt.executeQuery();
+
+            rs.next();
+            String s = rs.getString(1);
+
+            JSONArray arr;
+            if(s == null) {
+                arr = new JSONArray();
+                arr.add(trusted.getUniqueId().toString());
+            } else {
+                JSONParser parser = new JSONParser();
+                parser.parse(s);        //Will need to add a key to be able to get to the json array if done this way
+
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
 }

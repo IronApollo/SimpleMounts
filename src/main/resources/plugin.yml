@@ -31,3 +31,11 @@ commands:
     description: Reloads the config
     usage: /<mreload>
     permission: SimpleMounts.reload
+  mride:
+    description: Rides a currently summoned mount
+    usage: /<mride>
+    permission: SimpleMounts.ride
+  mrelease:
+    description: Releases the currently summoned mount
+    usage: /<mrelease>
+    permission: SimpleMounts.release
