@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import simplemounts.simplemounts.SimpleMounts;
 import simplemounts.simplemounts.Util.Database.Mount;
+import simplemounts.simplemounts.Util.Managers.ChatManager;
 import simplemounts.simplemounts.Util.Managers.EntityManager;
 
 import java.util.ArrayList;
@@ -49,6 +50,10 @@ public class RenameMount implements CommandExecutor {
             name = name.replace("&", "§");
             name = name.replace("_", " ");
         }
+
+        if(name.length() > 25) {SimpleMounts.sendUserError("Name is too long",player);return true;}
+        ChatManager cm = new ChatManager();
+        if(!cm.validateName(name)) {SimpleMounts.sendUserError("Profanity Detected. Try again",player);return true;}
 
         for(Mount m: mounts) {
             if(m.isSummoned()) {
