@@ -8,3 +8,7 @@ Basic:
   max-mounts: 3
   isImmortal: false
   isBreedable: true
+
+#To do with models / texture packs stuff
+Advanced:
+  custom-sounds: true

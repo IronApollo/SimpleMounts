@@ -10,10 +10,10 @@ import simplemounts.simplemounts.Util.Managers.EntityManager;
 
 import java.io.IOException;
 
-public class StoreMount implements CommandExecutor {
+public class Release implements CommandExecutor {
 
     /**
-     * /mstore
+     * /mrelease
      * @param sender Source of the command
      * @param command Command which was executed
      * @param label Alias of the command which was used
@@ -22,19 +22,25 @@ public class StoreMount implements CommandExecutor {
      */
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(!(sender instanceof Player)) return false;
-        if(!(sender.hasPermission("SimpleMounts.ClaimMounts"))) {return false;}
+        if (!(sender instanceof Player)) return false;
+        if (!(sender.hasPermission("SimpleMounts.release"))) {
+            return false;
+        }
 
         Player player = (Player) sender;
 
-        try {
-            EntityManager.storeSummonedMount(player);
-            player.playSound(player.getLocation(), Sound.ENTITY_HORSE_ARMOR,1.0f,1.0f);
-        } catch (IOException e) {
-            SimpleMounts.sendSystemError("Unable to save existing mount", player, e);
-            throw new RuntimeException(e);
+        if(!EntityManager.isSummoned(player)) {
+            SimpleMounts.sendUserError("Must first have a summoned mount", player);
+            return true;
         }
 
+        EntityManager.removeMount(player);
+
+        SimpleMounts.sendPlayerMessage("Your mount rides back into the wilderness...",player);
+        player.playSound(player.getLocation(), Sound.ENTITY_HORSE_ANGRY,1.0f,1.0f);
+
         return true;
+
+
     }
 }

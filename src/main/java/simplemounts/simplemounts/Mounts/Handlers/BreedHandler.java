@@ -1,6 +1,7 @@
 package simplemounts.simplemounts.Mounts.Handlers;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,7 +18,7 @@ public class BreedHandler implements Listener {
 
     @EventHandler
     public void onBreedEvent(EntityBreedEvent event) {
-        if(!(event.getEntity() instanceof Horse)) return;
+        if(!(event.getEntity() instanceof AbstractHorse)) return;
         if(!(event.getBreeder() instanceof Player)) return;
 
         Player player = (Player)event.getBreeder();

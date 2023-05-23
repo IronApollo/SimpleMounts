@@ -50,35 +50,43 @@ public class MountsPage {
         int counter = 0;
         for(JSONObject e: jsonObs) {
 
-            Horse.Color hc = Horse.Color.valueOf(e.get("color").toString());
+            ItemStack spawnEgg = null;
+            if(e.get("type").equals("HORSE")) {
+                Horse.Color hc = Horse.Color.valueOf(e.get("color").toString());
 
-            ItemStack spawnEgg;
-            switch(hc) {
-                case WHITE:
-                    spawnEgg = new ItemStack(Material.POLAR_BEAR_SPAWN_EGG);
-                    break;
-                case CREAMY:
-                    spawnEgg = new ItemStack(Material.LLAMA_SPAWN_EGG);
-                    break;
-                case CHESTNUT:
-                    spawnEgg = new ItemStack(Material.RABBIT_SPAWN_EGG);
-                    break;
-                case BROWN:
-                    spawnEgg = new ItemStack(Material.DONKEY_SPAWN_EGG);
-                    break;
-                case BLACK:
-                    spawnEgg = new ItemStack(Material.WITHER_SKELETON_SPAWN_EGG);
-                    break;
-                case GRAY:
-                    spawnEgg = new ItemStack(Material.STRAY_SPAWN_EGG);
-                    break;
-                case DARK_BROWN:
-                    spawnEgg = new ItemStack(Material.MULE_SPAWN_EGG);
-                    break;
-                default:
-                    spawnEgg = new ItemStack(Material.HORSE_SPAWN_EGG);
-                    break;
+
+                switch(hc) {
+                    case WHITE:
+                        spawnEgg = new ItemStack(Material.POLAR_BEAR_SPAWN_EGG);
+                        break;
+                    case CREAMY:
+                        spawnEgg = new ItemStack(Material.LLAMA_SPAWN_EGG);
+                        break;
+                    case CHESTNUT:
+                        spawnEgg = new ItemStack(Material.RABBIT_SPAWN_EGG);
+                        break;
+                    case BROWN:
+                        spawnEgg = new ItemStack(Material.DONKEY_SPAWN_EGG);
+                        break;
+                    case BLACK:
+                        spawnEgg = new ItemStack(Material.WITHER_SKELETON_SPAWN_EGG);
+                        break;
+                    case GRAY:
+                        spawnEgg = new ItemStack(Material.STRAY_SPAWN_EGG);
+                        break;
+                    case DARK_BROWN:
+                        spawnEgg = new ItemStack(Material.MULE_SPAWN_EGG);
+                        break;
+                    default:
+                        spawnEgg = new ItemStack(Material.HORSE_SPAWN_EGG);
+                        break;
+                }
+            } else if((e.get("type").equals("SKELETON_HORSE"))){
+                spawnEgg = new ItemStack(Material.BONE);
+            } else if((e.get("type").equals("ZOMBIE_HORSE"))) {
+                spawnEgg = new ItemStack(Material.ROTTEN_FLESH);
             }
+
 
 
             ItemMeta meta = spawnEgg.getItemMeta();

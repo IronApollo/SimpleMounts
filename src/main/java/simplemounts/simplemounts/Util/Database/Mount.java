@@ -15,8 +15,10 @@ public class Mount {
     private JSONObject horseData;
     private UUID mountId;
     private UUID entityId;
+    private ArrayList<UUID> trusted;
 
     public Mount(ArrayList<Object> row) {
+        trusted = new ArrayList<>();
         ownerId = UUID.fromString((String)row.get(0));
         mountId = UUID.fromString((String)row.get(1));
         if(row.get(2).equals("1")) isSummoned = true; else isSummoned = false;

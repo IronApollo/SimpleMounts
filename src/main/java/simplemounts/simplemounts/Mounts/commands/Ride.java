@@ -1,19 +1,18 @@
 package simplemounts.simplemounts.Mounts.commands;
 
-import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import simplemounts.simplemounts.SimpleMounts;
 import simplemounts.simplemounts.Util.Managers.EntityManager;
 
-import java.io.IOException;
-
-public class StoreMount implements CommandExecutor {
+public class Ride implements CommandExecutor {
 
     /**
-     * /mstore
+     * /mclaim
      * @param sender Source of the command
      * @param command Command which was executed
      * @param label Alias of the command which was used
@@ -22,18 +21,21 @@ public class StoreMount implements CommandExecutor {
      */
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(!(sender instanceof Player)) return false;
-        if(!(sender.hasPermission("SimpleMounts.ClaimMounts"))) {return false;}
+        if (!(sender instanceof Player)) return true;
+        if (!(sender.hasPermission("SimpleMounts.Ride"))) {
+            return true;
+        }
 
         Player player = (Player) sender;
 
-        try {
-            EntityManager.storeSummonedMount(player);
-            player.playSound(player.getLocation(), Sound.ENTITY_HORSE_ARMOR,1.0f,1.0f);
-        } catch (IOException e) {
-            SimpleMounts.sendSystemError("Unable to save existing mount", player, e);
-            throw new RuntimeException(e);
-        }
+        Entity e = EntityManager.getSummonedMount(player);
+
+        if(e == null) {SimpleMounts.sendUserError("Must have a mount summoned", player); return true;}
+
+        e.teleport(player.getLocation());
+
+        SimpleMounts.sendPlayerMessage("Yeehawwwwww",player);
+        e.addPassenger(player);
 
         return true;
     }

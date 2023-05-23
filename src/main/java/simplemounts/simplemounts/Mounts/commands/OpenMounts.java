@@ -27,7 +27,9 @@ public class OpenMounts implements CommandExecutor {
                 if(!sender.hasPermission("SimpleMounts.OpenMounts.others")) {sender.sendMessage(ChatColor.RED + "No permission to view other player's mounts");}
                 if(!(getPlayer(args[0]) instanceof Player) || getPlayer(args[0]) == null) {sender.sendMessage(ChatColor.RED + "Please select a valid player.");}
 
-                new MountsPage(player,player);  //Will need to change to sending player vs target
+                Player player2 = Bukkit.getPlayer(args[0]);
+
+                new MountsPage(player2,player);  //Will need to change to sending player vs target
                 return true;
 
             } else {

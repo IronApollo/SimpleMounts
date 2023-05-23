@@ -15,7 +15,7 @@ public class HorseSerialization {
      * @param horse The Horse to serialize
      * @return The serialized Horse
      */
-    public static JSONObject serializeHorse(Horse horse) {
+    public static JSONObject serializeHorse(AbstractHorse horse) {
             JSONObject root = new JSONObject();
 
             root.put("age", horse.getAge());
@@ -24,11 +24,16 @@ public class HorseSerialization {
             if(horse.getCustomName() != null) root.put("name", horse.getCustomName());
             root.put("type", horse.getType().toString());
 
-            root.put("color", horse.getColor().name().toString());
-            if(horse.getInventory().getArmor() != null) root.put("armor", horse.getInventory().getArmor().getType().toString());
+            if(horse instanceof Horse) {
+                Horse h = (Horse) horse;
+                root.put("color", h.getColor().name().toString());
+                if(h.getInventory().getArmor() != null) root.put("armor", h.getInventory().getArmor().getType().toString());
+                root.put("style", h.getStyle().toString());
+            }
+
             if(horse.getInventory().getSaddle() != null) root.put("saddle", horse.getInventory().getSaddle().getType().toString());
 
-            root.put("style", horse.getStyle().toString());
+
             root.put("summoned", false);
 
             //NMS attributes - maybe not if this works?
