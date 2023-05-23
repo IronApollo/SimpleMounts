@@ -30,7 +30,7 @@ public class BreedHandler implements Listener {
         Player motherOwner = (Player)mother.getOwner();
 
         if(fatherOwner != null && motherOwner != null) {
-            if(!SimpleMounts.getCustomConfig().getBoolean("Basic.isBreedable")) {
+            if(!SimpleMounts.getCustomConfig().getBoolean("basic.is-breedable")) {
                 SimpleMounts.sendUserError("Breeding of mounts is disabled",player);
                 event.setCancelled(true);
                 return;

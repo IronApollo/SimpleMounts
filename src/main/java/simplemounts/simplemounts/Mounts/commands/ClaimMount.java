@@ -61,7 +61,7 @@ public class ClaimMount implements CommandExecutor {
         ArrayList<Mount> mounts = EntityManager.getMounts(player);
 
         //Check if player is already at the max amount of mounts
-        if(mounts.size() >= SimpleMounts.getCustomConfig().getInt("Basic.max-mounts")) {
+        if(mounts.size() >= SimpleMounts.getCustomConfig().getInt("basic.max-mounts")) {
             SimpleMounts.sendUserError("You are currently at the max amount of mounts",player);
             return true;
         }

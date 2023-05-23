@@ -4,11 +4,11 @@
 # This plugin is designed to in the most simplest terms, provide simple mount store, summon, and simple customization
 
 #Basic Configuration
-Basic:
+basic:
   max-mounts: 3
-  isImmortal: false
-  isBreedable: true
+  is-immortal: false
+  is-breedable: true
 
 #To do with models / texture packs stuff
-Advanced:
+advanced:
   custom-sounds: true
